@@ -1,0 +1,77 @@
+handle versi 1.0 
+-----------------------------------------------------------------------------------------------
+//deklar global Variable
+    Handler mHandler;
+    Runnable mR;
+
+
+//write in onCreate Activity
+  mHandler = new Handler();
+  mR = new Runnable() {
+            @Override
+            public void run() {
+                String query = "DELETE FROM tb_codexd\n" +
+                        "WHERE CODD_FLNM = '" + Constants.USER_LOGIN + "'\n" +
+                        "AND CODD_VALU = '" + Constants.HSP + "'\n" +
+                        "AND WORK_USID = '" + mockData.getUserLogin() + "'\n" +
+                        "AND WORK_UDCH = '" + Constants.ANDROID + "'";
+                LogoutSync logoutSync = new LogoutSync();
+                logoutSync.execute(query);
+            }
+        };
+        startHandler();
+
+//create metodhe start dan stop handle
+ public void startHandler() {
+        mHandler.postDelayed(mR, 5 * 60 * 1000);
+    }
+
+    public void stopHandle() {
+        mHandler.removeCallbacks(mR);
+    }
+
+//or combine
+
+    private void delayedIdle(int delayMinutes) {
+        mHandler.removeCallbacks(mR);
+        mHandler.postDelayed(mR, (delayMinutes * 1000 * 60));
+    }
+//call method stop and start in userintercation 
+   stopHandle();
+   startHandler();
+//        delayedIdle(IDLE_DELAY_MINUTES);
+
+
+Handle ver 2.0
+
+//create constan disconnet timeout for time elipse
+private static final long DISCONNECT_TIMEOUT = 300000;
+
+//create global variable with constructor Handler
+private Handler disconnectHandler = new Handler();
+
+/*create method run from runnable singelaton and descript even what do you want
+if time elipse empty or 0*/
+ private Runnable disconnectCallback = new Runnable() {
+        @Override
+        public void run() {
+            //in here.........
+        }
+    };
+//create methode resetDisconnnetTimer and Stop yet
+ public void resetDisconnectTimer() {
+        disconnectHandler.removeCallbacks(disconnectCallback);
+        disconnectHandler.postDelayed(disconnectCallback, DISCONNECT_TIMEOUT);
+    }
+
+    public void stopDisconnectTimer() {
+        disconnectHandler.removeCallbacks(disconnectCallback);
+    }
+//call method reset in onUserInteraction
+resetDisconnectTimer();
+//call method reset in onResume
+resetDisconnectTimer();
+//call method stop in onStop
+stopDisconnectTimer();
+
+
